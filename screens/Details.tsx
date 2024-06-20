@@ -2,6 +2,7 @@ import { Image, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HEIGHT, WIDTH } from '../constants';
 import Animated from 'react-native-reanimated';
+import { SharedElement } from 'react-navigation-shared-element';
 
 const DetailsScreen = ({ route }: any) => {
   const { plant } = route.params;
@@ -22,22 +23,28 @@ const DetailsScreen = ({ route }: any) => {
           <Text style={{ fontSize: 16, fontWeight: '700' }}>
             ${plant.price}
           </Text>
-          <Animated.Image
-            source={{ uri: plant.image }}
-            style={{
-              height: HEIGHT * 0.5,
-              width: WIDTH * 0.5,
-              position: 'absolute',
-              right: 10,
-              top: -30,
-            }}
-            resizeMode="contain"
-            sharedTransitionTag={`plant-${plant.id}`}
-          />
+          <SharedElement id={`item.${plant.id}.photo`}>
+            <Image
+              source={{ uri: plant.image }}
+              style={{
+                height: HEIGHT * 0.5,
+                width: WIDTH * 0.5,
+                position: 'absolute',
+                right: 10,
+                top: -30,
+              }}
+              resizeMode="contain"
+            />
+          </SharedElement>
         </View>
       </View>
     </View>
   );
+};
+
+DetailsScreen.sharedElements = (route, otherRoute, showing) => {
+  const { plant } = route.params;
+  return [`item.${plant.id}.photo`];
 };
 
 export default DetailsScreen;

@@ -1,5 +1,4 @@
 import {
-  Button,
   FlatList,
   Image,
   StyleSheet,
@@ -7,38 +6,18 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { WIDTH } from '../constants';
-import Animated, {
-  SharedTransition,
-  withSpring,
-} from 'react-native-reanimated';
-
-const customTransition = SharedTransition.custom(values => {
-  'worklet';
-  return {
-    height: withSpring(values.targetHeight),
-    width: withSpring(values.targetWidth),
-    originX: withSpring(values.targetOriginX),
-    originY: withSpring(values.targetOriginY),
-  };
-});
+import Animated from 'react-native-reanimated';
+import useFetch from '../hooks/useFetch';
+import { SharedElement } from 'react-navigation-shared-element';
 
 const HomeScreen = () => {
   const navigation = useNavigation<any>();
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    const handleFetch = async () => {
-      const response = await fetch(
-        'https://create.blinkapi.io/api/eSphKNzwb9EJBt6GBjKx7Q',
-      );
-      const data = await response.json();
-      setData(data);
-    };
-    handleFetch();
-  }, []);
+  const { data, error, loading } = useFetch(
+    'https://create.blinkapi.io/api/eSphKNzwb9EJBt6GBjKx7Q',
+  );
 
   return (
     <View style={{ flex: 1 }}>
@@ -80,18 +59,18 @@ const HomeScreen = () => {
                 ${item.price}
               </Text>
             </View>
-            <Animated.Image
-              source={{ uri: item.image }}
-              style={{
-                height: WIDTH * 0.35,
-                width: WIDTH * 0.35,
-                position: 'absolute',
-                right: -WIDTH * 0.1,
-                top: -30,
-              }}
-              sharedTransitionTag={`plant-${item.id}`}
-              // sharedTransitionStyle={customTransition}
-            />
+            <SharedElement id={`item.${item.id}.photo`}>
+              <Image
+                source={{ uri: item.image }}
+                style={{
+                  height: WIDTH * 0.35,
+                  width: WIDTH * 0.35,
+                  position: 'absolute',
+                  right: -WIDTH * 0.1,
+                  top: -30,
+                }}
+              />
+            </SharedElement>
           </TouchableOpacity>
         )}
       />
