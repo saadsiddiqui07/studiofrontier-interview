@@ -10,6 +10,20 @@ import {
 import React, { useEffect, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { WIDTH } from '../constants';
+import Animated, {
+  SharedTransition,
+  withSpring,
+} from 'react-native-reanimated';
+
+const customTransition = SharedTransition.custom(values => {
+  'worklet';
+  return {
+    height: withSpring(values.targetHeight),
+    width: withSpring(values.targetWidth),
+    originX: withSpring(values.targetOriginX),
+    originY: withSpring(values.targetOriginY),
+  };
+});
 
 const HomeScreen = () => {
   const navigation = useNavigation<any>();
@@ -52,7 +66,7 @@ const HomeScreen = () => {
               width: WIDTH * 0.85,
             }}>
             <View style={{ padding: 10 }}>
-              <Text>Air purifier</Text>
+              <Text>Air purifier {item.id}</Text>
               <Text
                 style={{
                   fontSize: 32,
@@ -66,7 +80,7 @@ const HomeScreen = () => {
                 ${item.price}
               </Text>
             </View>
-            <Image
+            <Animated.Image
               source={{ uri: item.image }}
               style={{
                 height: WIDTH * 0.35,
@@ -75,6 +89,8 @@ const HomeScreen = () => {
                 right: -WIDTH * 0.1,
                 top: -30,
               }}
+              sharedTransitionTag={`plant-${item.id}`}
+              // sharedTransitionStyle={customTransition}
             />
           </TouchableOpacity>
         )}

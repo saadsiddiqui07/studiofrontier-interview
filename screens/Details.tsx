@@ -1,6 +1,7 @@
 import { Image, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { HEIGHT, WIDTH } from '../constants';
+import Animated from 'react-native-reanimated';
 
 const DetailsScreen = ({ route }: any) => {
   const { plant } = route.params;
@@ -14,14 +15,14 @@ const DetailsScreen = ({ route }: any) => {
           borderBottomRightRadius: 400,
           borderBottomLeftRadius: 50,
         }}>
-        <Text>Air purifier</Text>
+        <Text>Air purifier {plant.id}</Text>
         <Text style={{ fontSize: 38, fontWeight: '700' }}>{plant.name}</Text>
         <View style={{}}>
           <Text style={{ fontWeight: '800', color: 'gray' }}>Price</Text>
           <Text style={{ fontSize: 16, fontWeight: '700' }}>
             ${plant.price}
           </Text>
-          <Image
+          <Animated.Image
             source={{ uri: plant.image }}
             style={{
               height: HEIGHT * 0.5,
@@ -31,6 +32,7 @@ const DetailsScreen = ({ route }: any) => {
               top: -30,
             }}
             resizeMode="contain"
+            sharedTransitionTag={`plant-${plant.id}`}
           />
         </View>
       </View>
